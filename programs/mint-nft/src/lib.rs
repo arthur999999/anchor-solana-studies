@@ -22,7 +22,7 @@ pub mod mint_nft {
 
     use super::*;
 
-    pub fn mint_nft(ctx: Context<MintNft>) -> Result<()> {
+    pub fn mint_nft(ctx: Context<MintNft>, metadata_title: String, metadata_symbol: String, metadata_uri: String) -> Result<()> {
 
         msg!("Criando mint account...");
         msg!("Mint: {}", &ctx.accounts.mint.key());
@@ -86,24 +86,35 @@ pub mod mint_nft {
         msg!("Metadata account adress: {}", &ctx.accounts.metadata.to_account_info().key());
         invoke(
             &token_instruction::create_metadata_accounts_v2(
-                program_id, 
-                metadata_account, 
-                mint, 
-                mint_authority, 
-                payer, 
-                update_authority, 
-                name, 
-                symbol, 
-                uri, 
-                creators, 
-                seller_fee_basis_points, 
-                update_authority_is_signer, 
-                is_mutable, 
-                collection, 
-                uses
+                TOKEN_METADATA_ID, 
+                ctx.accounts.metadata.key(), 
+                ctx.accounts.mint.key(), 
+                ctx.accounts.mint_authority.key(), 
+                ctx.accounts.mint_authority.key(), 
+                ctx.accounts.mint_authority.key(), 
+                metadata_title, 
+                metadata_symbol, 
+                metadata_uri, 
+                None, 
+                1, 
+                true, 
+                false, 
+                None, 
+                None
             ), 
-            account_infos
-        );
+            &[
+                ctx.accounts.metadata.to_account_info(),
+                ctx.accounts.mint.to_account_info(),
+                ctx.accounts.token_account.to_account_info(),
+                ctx.accounts.mint_authority.to_account_info(),
+                ctx.accounts.rent.to_account_info()
+            ]
+        )?;
+
+        msg!("Criando a master editions account...");
+        msg!("Master edition metadata account address: {}", &ctx.accounts.master_edition.to_account_info().key());
+
+        
 
 
         Ok(())
