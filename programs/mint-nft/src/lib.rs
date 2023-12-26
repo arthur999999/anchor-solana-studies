@@ -18,7 +18,6 @@ declare_id!("7RYU21hggffWcHJGA2adRD45vB6XnAabZbXpqv6XFE6S");
 
 #[program]
 pub mod mint_nft {
-    use anchor_lang::solana_program::lamports;
 
     use super::*;
 
@@ -145,15 +144,18 @@ pub mod mint_nft {
 pub struct MintNft<'info> {
 
     #[account(mut)]
+    /// CHECK:
     pub metadata: UncheckedAccount<'info>,
 
     #[account(mut)]
+    /// CHECK:
     pub master_edition: UncheckedAccount<'info>,
 
     #[account(mut)]
     pub mint: Signer<'info>,
 
     #[account(mut)]
+    /// CHECK:
     pub token_account: UncheckedAccount<'info>,
 
     #[account(mut)]
@@ -162,6 +164,7 @@ pub struct MintNft<'info> {
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, token::Token>,
     pub associated_token_program: Program<'info, associated_token::AssociatedToken>,
+    /// CHECK:
     pub token_metadata_program: UncheckedAccount<'info>
 
 }
