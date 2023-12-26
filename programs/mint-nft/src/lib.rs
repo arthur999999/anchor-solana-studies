@@ -113,6 +113,26 @@ pub mod mint_nft {
 
         msg!("Criando a master editions account...");
         msg!("Master edition metadata account address: {}", &ctx.accounts.master_edition.to_account_info().key());
+        invoke(
+            &token_instruction::create_master_edition_v3(
+                TOKEN_METADATA_ID, 
+                ctx.accounts.master_edition.key(), 
+                ctx.accounts.mint.key(), 
+                ctx.accounts.mint_authority.key(), 
+                ctx.accounts.mint_authority.key(), 
+                ctx.accounts.metadata.key(), 
+                ctx.accounts.rent.key(), 
+                Some(0)),
+            &[
+                ctx.accounts.metadata.to_account_info(),
+                ctx.accounts.mint.to_account_info(),
+                ctx.accounts.token_account.to_account_info(),
+                ctx.accounts.mint_authority.to_account_info(),
+                ctx.accounts.rent.to_account_info()
+            ]
+        )?;
+
+        msg!("Processo de Mintagem finalizado com sucesso.");
 
         
 
