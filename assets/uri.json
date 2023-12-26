@@ -1,0 +1,10 @@
+{
+    "name": "minha NFT",
+    "symbol": "WONY",
+    "description": "Teste do meu program",
+    "seller_fee_basis_points": 5,
+    "external_url": "",
+    "edition": "",
+    "background_color": "000000",
+    "image": "https://i.pinimg.com/736x/44/93/14/449314bcf49dbf85581068d237eaefb3.jpg"
+}
