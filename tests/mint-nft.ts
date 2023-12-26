@@ -8,9 +8,5 @@ describe("mint-nft", () => {
 
   const program = anchor.workspace.MintNft as Program<MintNft>;
 
-  it("Is initialized!", async () => {
-    // Add your test here.
-    const tx = await program.methods.initialize().rpc();
-    console.log("Your transaction signature", tx);
-  });
+  
 });
