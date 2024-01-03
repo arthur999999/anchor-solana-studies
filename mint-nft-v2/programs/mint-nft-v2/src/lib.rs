@@ -6,7 +6,7 @@ use {
             create_master_edition_v3, create_metadata_accounts_v3, CreateMasterEditionV3,
             CreateMetadataAccountsV3, Metadata,
         },
-        token::{mint_to, Mint, MintTo, Token, TokenAccount},
+        token::{mint_to, Mint, MintTo, TokenAccount},
     },
     mpl_token_metadata::{
         pda::{find_master_edition_account, find_metadata_account},
@@ -37,13 +37,49 @@ pub mod mint_nft_v2 {
             msg!("Criando a metadata");
             create_metadata_accounts_v3(
                 CpiContext::new(
-                    ctx.accounts.,
-                    accounts),
-                data,
-                is_mutable,
-                update_authority_is_signer,
-                details
+                    ctx.accounts.token_metadata_program.to_account_info(),
+                    CreateMetadataAccountsV3 { 
+                        metadata: ctx.accounts.metadata_account.to_account_info(),
+                        mint: ctx.accounts.mint_account.to_account_info(), 
+                        mint_authority: ctx.accounts.payer.to_account_info(), 
+                        payer: ctx.accounts.payer.to_account_info(), 
+                        update_authority: ctx.accounts.payer.to_account_info(), 
+                        system_program: ctx.accounts.system_program.to_account_info(), 
+                        rent: ctx.accounts.rent.to_account_info() 
+                    }),
+                DataV2 { 
+                    name: nft_name, 
+                    symbol: nft_symbol, 
+                    uri: nft_uri, 
+                    seller_fee_basis_points: 0, 
+                    creators: None, 
+                    collection: None, 
+                    uses: None 
+                },
+                false,
+                true,
+                None
             )?;
+
+            msg!("Criando a master edition");
+            create_master_edition_v3(
+                CpiContext::new(
+                    ctx.accounts.token_metadata_program.to_account_info(), 
+                    CreateMasterEditionV3 { 
+                        edition: ctx.accounts.edition_account.to_account_info(), 
+                        mint: ctx.accounts.mint_account.to_account_info(), 
+                        update_authority: ctx.accounts.payer.to_account_info(), 
+                        mint_authority: ctx.accounts.payer.to_account_info(), 
+                        payer: ctx.accounts.payer.to_account_info(), 
+                        metadata: ctx.accounts.metadata_account.to_account_info(), 
+                        token_program: ctx.accounts.token_program.to_account_info(), 
+                        system_program: ctx.accounts.system_program.to_account_info(), 
+                        rent: ctx.accounts.rent.to_account_info() 
+                    }
+                ), 
+                None
+            )?;
+            msg!("Tudo feito!");
         
         Ok(())
     }
@@ -60,7 +96,7 @@ pub struct MintNft<'info> {
         address=find_metadata_account(&mint_account.key()).0
     )]
     pub metadata_account: UncheckedAccount<'info>,
-    //CHECK:
+    ///CHECK:
     #[account(
         mut,
         address=find_master_edition_account(&mint_account.key()).0
